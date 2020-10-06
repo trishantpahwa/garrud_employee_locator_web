@@ -1,6 +1,6 @@
 const { Client } = require('pg');
 
-function createEmployee(name, callback) {
+function createEmployee(name, user_name, callback) {
     const client = new Client({
         connectionString: process.env.DATABASE_URL,
         ssl: {
@@ -8,14 +8,14 @@ function createEmployee(name, callback) {
         }
     });
     client.connect();
-    const query = 'INSERT INTO ';
+    const query = 'INSERT INTO "Employee" ("employee_name", "lat", "lng", "user_name") VALUES (\'' + name + '\', \'lat\',\'lng\',\'' + user_name + '\');';
     client.query(query, function(err, res) {
         callback(err, res);
         client.end();
     });
 }
 
-function setEmployeeLocation(name, lat, lng, callback) {
+function setEmployeeLocation(name, lat, lng, user_name, callback) {
     const client = new Client({
         connectionString: process.env.DATABASE_URL,
         ssl: {
@@ -23,7 +23,22 @@ function setEmployeeLocation(name, lat, lng, callback) {
         }
     });
     client.connect();
-    const query = 'ALTER TABLE  ';
+    const query = 'UPDATE "Employee" SET "lat"=\'' + lat + '\', "lng"=\'' + lng + '\' WHERE "employee_name"=\'' + name + '\' AND "user_name"=\'' + user_name + '\';';
+    client.query(query, function(err, res) {
+        callback(err, res);
+        client.end();
+    });
+}
+
+function getLocations(callback) {
+    const client = new Client({
+        connectionString: process.env.DATABASE_URL,
+        ssl: {
+          rejectUnauthorized: false
+        }
+    });
+    client.connect();
+    const query = 'SELECT * FROM "Employee";';
     client.query(query, function(err, res) {
         callback(err, res);
         client.end();
@@ -32,5 +47,6 @@ function setEmployeeLocation(name, lat, lng, callback) {
 
 module.exports = { 
     createEmployee,
-    setEmployeeLocation
+    setEmployeeLocation,
+    getLocations
 };
