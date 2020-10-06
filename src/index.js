@@ -2,6 +2,7 @@ const express = require('express');
 var cors = require('cors');
 var morgan = require('morgan');
 var bodyParser = require('body-parser');
+const fs = require('fs');
 
 const { createEmployee } = require('./employee.js');
 const { setEmployeeLocation } = require('./employee.js');
@@ -56,6 +57,11 @@ app.get('/details', function (req, res) {
 		});
 		res.json({'Employees': employees});
 	});
+});
+
+app.get('/pretty-details', function(req, res) {
+	const locations = fs.readFileSync('static/locations.html').toString();
+	res.send(locations);
 });
 
 app.listen(process.env.PORT || 3000, function() {

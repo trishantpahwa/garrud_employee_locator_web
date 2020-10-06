@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+    <head>
+        <title>Garrud Employee Locator</title>
+    </head>
+    <body>
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+        <h1>Garrud Employee Locator</h1>
+        <div id="employees"></div>
+        <script>
+            var employees = document.getElementById('employees');
+            var employee_details = '<table border=1>';
+            axios.get('https://garrud-employee-locator.herokuapp.com/details').then(function(response) {
+                const _employees = response.data.Employees;
+                _employees.forEach(function(employee) {
+employee_details += '<tr><td>' + employee.employee_name + '</td><td>' + employee.time + '</td><td><a target=_blank href="' + employee['Live location'] + '">Live location</a></td></tr>';
+                });
+                employee_details += '</table>';
+                employees.innerHTML = employee_details;
+            }).catch(function(err) {
+                console.log(err);
+            });
+        </script>
+    </body>
+</html>
