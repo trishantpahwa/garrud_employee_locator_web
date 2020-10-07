@@ -34,7 +34,11 @@
                     axios.get('https://garrud-employee-locator.herokuapp.com/details/' + employee.user_name).then(function(_response) {
                         const locations = _response.data.Locations;
                         const last_location = locations[locations.length-1];
-                        const distanceValue = calculateDistance(locations);
+                        if(locations.length > 1) {
+                            const distanceValue = calculateDistance(locations);
+                        } else {
+                            distanceValue = 0;
+                        }
                         var tableElement = document.getElementById('emp_details');
                         var row = document.createElement('tr');
                         var name = document.createElement('td');
