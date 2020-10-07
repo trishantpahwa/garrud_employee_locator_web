@@ -45,7 +45,7 @@
                         name.innerText = employee.employee_name;
                         var lastLocationElement = document.createElement('td');
                         console.log(Object.keys(last_location));
-                        lastLocationElement.innerHTML = '<a href="https://www.google.com/maps/search/?api=1&query=' + last_location.Lat + ',' + last_location.Lng + '" target=_blank>' + last_location.Lat + ',' + last_location.Lng + '</a>';
+                        lastLocationElement.innerHTML = '<a href="https://www.google.com/maps/search/?api=1&query=' + last_location.lat + ',' + last_location.lng + '" target=_blank>' + last_location.lat + ',' + last_location.lng + '</a>';
                         var lastLocationTime = document.createElement('td');
                         lastLocationTime.innerText = last_location.time;
                         var distance = document.createElement('td');
@@ -66,10 +66,10 @@
                 var distance = 0;
                 const R = 6371e3; // metres
                 for(var i=0;i<locations.length-1;i++) {
-                    const lat1 = locations[i].Lat;
-                    const lon1 = locations[i].Lng;
-                    const lat2 = locations[i+1].Lat;
-                    const lon2 = locations[i+1].Lng;
+                    const lat1 = locations[i].lat;
+                    const lon1 = locations[i].lng;
+                    const lat2 = locations[i+1].lat;
+                    const lon2 = locations[i+1].lng;
                     const φ1 = lat1 * Math.PI/180; // φ, λ in radians
                     const φ2 = lat2 * Math.PI/180;
                     const Δφ = (lat2-lat1) * Math.PI/180;
