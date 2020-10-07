@@ -28,10 +28,10 @@
             table_frame.appendChild(col4);
             employeesTable.appendChild(table_frame);
             employeesElement.appendChild(employeesTable);
-            axios.get('http://localhost:3000/employees').then(function(response) {
+            axios.get('https://garrud-employee-locator.herokuapp.com/employees').then(function(response) {
                 employees = response.data.Employees;
                 employees.forEach(function(employee) {
-                    axios.get('http://localhost:3000/details/' + employee.user_name).then(function(_response) {
+                    axios.get('https://garrud-employee-locator.herokuapp.com/details/' + employee.user_name).then(function(_response) {
                         const locations = _response.data.Locations;
                         const last_location = locations[locations.length-1];
                         const distanceValue = calculateDistance(locations);
