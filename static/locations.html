@@ -39,14 +39,14 @@
                         var row = document.createElement('tr');
                         var name = document.createElement('td');
                         name.innerText = employee.employee_name;
-                        var lastLocation = document.createElement('td');
-                        lastLocation.innerHTML = '<a href="https://www.google.com/maps/search/?api=1&query=' + last_location.lat + ',' + last_location.lng + '" target=_blank>' + last_location.lat + ',' + last_location.lng + '</a>';
+                        var lastLocationElement = document.createElement('td');
+                        lastLocationElement.innerHTML = '<a href="https://www.google.com/maps/search/?api=1&query=' + last_location.lat + ',' + last_location.lng + '" target=_blank>' + last_location.lat + ',' + last_location.lng + '</a>';
                         var lastLocationTime = document.createElement('td');
                         lastLocationTime.innerText = last_location.time;
                         var distance = document.createElement('td');
                         distance.innerText = distanceValue;
                         row.appendChild(name);
-                        row.appendChild(lastLocation);
+                        row.appendChild(lastLocationElement);
                         row.appendChild(lastLocationTime);
                         row.appendChild(distance);
                         tableElement.appendChild(row);
