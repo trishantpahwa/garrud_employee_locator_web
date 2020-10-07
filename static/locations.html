@@ -7,18 +7,75 @@
         <h1>Garrud Employee Locator</h1>
         <div id="employees"></div>
         <script>
-            var employees = document.getElementById('employees');
-            var employee_details = '<table border=1>';
-            axios.get('https://garrud-employee-locator.herokuapp.com/details').then(function(response) {
-                const _employees = response.data.Employees;
-                _employees.forEach(function(employee) {
-employee_details += '<tr><td>' + employee.employee_name + '</td><td>' + employee.time + '</td><td><a target=_blank href="' + employee['Live location'] + '">Live location</a></td></tr>';
+            var employees = null;
+            var employeesElement = document.getElementById('employees');
+            var employeesTable = document.createElement('table');
+            employeesTable.setAttribute('id', 'emp_details');
+            employeesTable.setAttribute('border', '1');
+            employeesTable.setAttribute('padding', '5px');
+            var table_frame = document.createElement('tr');
+            const col1 = document.createElement('td');
+            col1.innerText = 'Name';
+            const col2 = document.createElement('td');
+            col2.innerText = 'Last Location';
+            const col3 = document.createElement('td');
+            col3.innerText = 'Last Location Time';
+            const col4 = document.createElement('td');
+            col4.innerText = 'Distance since 9 AM';
+            table_frame.appendChild(col1);
+            table_frame.appendChild(col2);
+            table_frame.appendChild(col3);
+            table_frame.appendChild(col4);
+            employeesTable.appendChild(table_frame);
+            employeesElement.appendChild(employeesTable);
+            axios.get('http://localhost:3000/employees').then(function(response) {
+                employees = response.data.Employees;
+                employees.forEach(function(employee) {
+                    axios.get('http://localhost:3000/details/' + employee.user_name).then(function(_response) {
+                        const locations = _response.data.Locations;
+                        const last_location = locations[locations.length-1];
+                        const distanceValue = calculateDistance(locations);
+                        var tableElement = document.getElementById('emp_details');
+                        var row = document.createElement('tr');
+                        var name = document.createElement('td');
+                        name.innerText = employee.employee_name;
+                        var lastLocation = document.createElement('td');
+                        lastLocation.innerHTML = '<a href="https://www.google.com/maps/search/?api=1&query=' + last_location.lat + ',' + last_location.lng + '" target=_blank>' + last_location.lat + ',' + last_location.lng + '</a>';
+                        var lastLocationTime = document.createElement('td');
+                        lastLocationTime.innerText = last_location.time;
+                        var distance = document.createElement('td');
+                        distance.innerText = distanceValue;
+                        row.appendChild(name);
+                        row.appendChild(lastLocation);
+                        row.appendChild(lastLocationTime);
+                        row.appendChild(distance);
+                        tableElement.appendChild(row);
+                    }).catch(function(err) {
+                        console.log(err);
+                    });
                 });
-                employee_details += '</table>';
-                employees.innerHTML = employee_details;
             }).catch(function(err) {
                 console.log(err);
             });
+            function calculateDistance(locations) {
+                var distance = 0;
+                const R = 6371e3; // metres
+                for(var i=0;i<locations.length-1;i++) {
+                    const lat1 = locations[i].lat;
+                    const lon1 = locations[i].lng;
+                    const lat2 = locations[i+1].lat;
+                    const lon2 = locations[i+1].lng;
+                    const φ1 = lat1 * Math.PI/180; // φ, λ in radians
+                    const φ2 = lat2 * Math.PI/180;
+                    const Δφ = (lat2-lat1) * Math.PI/180;
+                    const Δλ = (lon2-lon1) * Math.PI/180;
+                    const a = Math.sin(Δφ/2) * Math.sin(Δφ/2) + Math.cos(φ1) * Math.cos(φ2) * Math.sin(Δλ/2) * Math.sin(Δλ/2);
+                    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+                    distance += R * c; // in metres
+                }
+                distance /= 1000;
+                return distance;
+            }
         </script>
     </body>
 </html>
